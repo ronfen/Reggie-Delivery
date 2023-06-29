@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.leo.reggie.common.CustomException;
 import com.leo.reggie.dto.SetmealDto;
+import com.leo.reggie.entity.Dish;
 import com.leo.reggie.entity.Setmeal;
 import com.leo.reggie.entity.SetmealDish;
 import com.leo.reggie.mapper.SetmealMapper;
 import com.leo.reggie.service.SetmealDishService;
 import com.leo.reggie.service.SetmealService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +61,25 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         LambdaQueryWrapper<SetmealDish> lambdaQueryWrapper1 = new LambdaQueryWrapper<>();
         lambdaQueryWrapper1.in(SetmealDish::getSetmealId, ids);
         setmealDishService.remove(lambdaQueryWrapper1);
+
+    }
+
+    @Override
+    public SetmealDto getWithSetDish(Long id) {
+        Setmeal setMeal = this.getById(id);
+        
+        SetmealDto setmealDto = new SetmealDto();
+        BeanUtils.copyProperties(setMeal,setmealDto);
+
+
+
+        LambdaQueryWrapper<SetmealDish> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(SetmealDish::getSetmealId,setmealDto.getId());
+        List<SetmealDish> list = setmealDishService.list(lambdaQueryWrapper);
+        setmealDto.setSetmealDishes(list);
+
+
+        return setmealDto;
 
     }
 }

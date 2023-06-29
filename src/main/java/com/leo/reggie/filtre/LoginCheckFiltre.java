@@ -25,6 +25,9 @@ public class LoginCheckFiltre implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
 
+        log.info("filtre request ============ {}",httpServletRequest.getRequestURI());
+
+
 
         String requestURL = httpServletRequest.getRequestURI();
         String[] urls = new String[]{
@@ -40,12 +43,15 @@ public class LoginCheckFiltre implements Filter {
 
         boolean check = check(urls,requestURL);
         if(check){
+            log.info("passed filtre directly");
             filterChain.doFilter(httpServletRequest,httpServletResponse);
             return;
         }
 
         if(httpServletRequest.getSession().getAttribute("employee") != null){
+
             Long empId = (Long) httpServletRequest.getSession().getAttribute("employee");
+            log.info("the current user is ======= {}",empId);
             BaseContext.setCurrentId(empId);
             filterChain.doFilter(httpServletRequest,httpServletResponse);
 
@@ -57,6 +63,7 @@ public class LoginCheckFiltre implements Filter {
 
 
         //log.info("filtre---:{}",httpServletRequest.getRequestURI());
+
 
     }
 

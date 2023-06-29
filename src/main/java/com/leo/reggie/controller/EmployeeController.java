@@ -37,11 +37,11 @@ public class EmployeeController {
         Employee emp = employeeService.getOne(queryWrapper);
 
         if(emp == null){
-            return R.error("Login failure!");
+            return R.error("No emp Login failure!");
         }
 
         if(!emp.getPassword().equals(password)){
-            return R.error("Login failure!");
+            return R.error("password not match Login failure!");
         }
 
         //check the status of the employee, --1 means active, 0 means inactive
@@ -80,6 +80,7 @@ public class EmployeeController {
         employee.setCreateUser(empId);
         employee.setUpdateUser(empId);*/
         employeeService.save(employee);
+
 
         return R.success("one employee added!");
     }

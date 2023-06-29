@@ -117,6 +117,7 @@ public class DishController {
         dish.setId(ids);
         dish.setStatus(status);
 
+
         dishService.updateById(dish);
 
 

@@ -4,6 +4,7 @@ package com.leo.reggie.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.leo.reggie.common.R;
+import com.leo.reggie.dto.DishDto;
 import com.leo.reggie.dto.SetmealDto;
 import com.leo.reggie.entity.Category;
 import com.leo.reggie.entity.Setmeal;
@@ -92,4 +93,16 @@ public class SetmealController {
 
         return R.success("delete successfully");
     }
+
+
+    @GetMapping({"/{id}"})
+    public R<SetmealDto> getById(@PathVariable Long id){
+
+
+        SetmealDto setmealDto = setmealService.getWithSetDish(id);
+
+
+        return R.success(setmealDto);
+    }
+
 }
