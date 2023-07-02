@@ -15,8 +15,8 @@ import java.io.IOException;
 
 
 @Slf4j
-@WebFilter(filterName = "loginCheckFiltre", urlPatterns = "/*")
-public class LoginCheckFiltre implements Filter {
+@WebFilter(filterName = "loginCheckFilter", urlPatterns = "/*")
+public class LoginCheckFilter implements Filter {
 
     public static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
@@ -25,7 +25,7 @@ public class LoginCheckFiltre implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
 
-        log.info("filtre request ============ {}",httpServletRequest.getRequestURI());
+        log.info("filter request ============ {}",httpServletRequest.getRequestURI());
 
 
 
@@ -43,7 +43,7 @@ public class LoginCheckFiltre implements Filter {
 
         boolean check = check(urls,requestURL);
         if(check){
-            log.info("passed filtre directly");
+            log.info("passed filter directly");
             filterChain.doFilter(httpServletRequest,httpServletResponse);
             return;
         }
@@ -62,7 +62,7 @@ public class LoginCheckFiltre implements Filter {
         httpServletResponse.getWriter().write(JSON.toJSONString(R.error("NOTLOGIN")));
 
 
-        //log.info("filtre---:{}",httpServletRequest.getRequestURI());
+        //log.info("filter---:{}",httpServletRequest.getRequestURI());
 
 
     }

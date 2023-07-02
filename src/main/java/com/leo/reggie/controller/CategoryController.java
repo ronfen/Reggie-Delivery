@@ -19,8 +19,11 @@ import java.util.List;
 @RequestMapping("/category")
 public class CategoryController {
 
-    @Autowired
     private CategoryService service;
+
+    public CategoryController(CategoryService service) {
+        this.service = service;
+    }
 
     @PostMapping
     public R<String> save(@RequestBody Category category){

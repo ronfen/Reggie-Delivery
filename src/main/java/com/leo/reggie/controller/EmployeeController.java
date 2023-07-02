@@ -22,13 +22,15 @@ import java.time.LocalDateTime;
 @RequestMapping("/employee")
 public class EmployeeController {
 
-    @Autowired
     private EmployeeService employeeService;
 
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
 
     @PostMapping("/login")
     public R<Employee> login(HttpServletRequest httpServletRequest, @RequestBody Employee employee){
-        //convert password in the form of md5 encryto
+        //convert password in the form of md5 encryption
         String password = employee.getPassword();
         password = DigestUtils.md5DigestAsHex(password.getBytes());
 

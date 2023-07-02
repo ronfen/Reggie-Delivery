@@ -25,15 +25,19 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DishController {
 
-    @Autowired
     private DishService dishService;
 
-    @Autowired
+
     private DishFlavorService dishFlavorService;
 
-    @Autowired
+
     private CategoryService categoryService;
 
+    public DishController(DishService dishService, DishFlavorService dishFlavorService, CategoryService categoryService) {
+        this.dishService = dishService;
+        this.dishFlavorService = dishFlavorService;
+        this.categoryService = categoryService;
+    }
 
     @PostMapping
     public R<String> save(@RequestBody DishDto dishDto){
@@ -110,15 +114,20 @@ public class DishController {
     }
 
     @PostMapping("/status/{status}")
-    public R<String> updateStatusById(@PathVariable int status, Long ids){
+    public R<String> updateStatusById(@PathVariable int status, @RequestParam List<Long> ids){
         log.info("status----"+ status);
         log.info("id-----"+ids);
-        Dish dish = new Dish();
-        dish.setId(ids);
-        dish.setStatus(status);
+
+        ids.forEach((id) ->{
+            Dish dish = new Dish();
+            dish.setId(id);
+            dish.setStatus(status);
+            dishService.updateById(dish);
+        });
 
 
-        dishService.updateById(dish);
+
+
 
 
         return R.success("update status successfully");
