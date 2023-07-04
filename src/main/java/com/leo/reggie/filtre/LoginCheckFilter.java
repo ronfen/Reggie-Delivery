@@ -35,26 +35,36 @@ public class LoginCheckFilter implements Filter {
                 "/employee/logout",
                 "/backend/**",
                 "/front/**",
-                "user/sendMsg",
-                "user/login"
+                "/common/**",
+                "/user/sendMsg",
+                "/user/login"
 
 
         };
 
         boolean check = check(urls,requestURL);
         if(check){
-            log.info("passed filter directly");
+            log.info("filter request ===== {} and passed filter directly",requestURL);
             filterChain.doFilter(httpServletRequest,httpServletResponse);
             return;
         }
 
+        //check if an employee logs in.
         if(httpServletRequest.getSession().getAttribute("employee") != null){
 
             Long empId = (Long) httpServletRequest.getSession().getAttribute("employee");
-            log.info("the current user is ======= {}",empId);
+            log.info("the current employee is ======= {}",empId);
             BaseContext.setCurrentId(empId);
             filterChain.doFilter(httpServletRequest,httpServletResponse);
 
+            return;
+        }
+        //check if a user logs in.
+        if(httpServletRequest.getSession().getAttribute("user") != null){
+            Long userId = (Long) httpServletRequest.getSession().getAttribute("user");
+            log.info("the current user is ======= {}",userId);
+            BaseContext.setCurrentId(userId);
+            filterChain.doFilter(httpServletRequest,httpServletResponse);
 
             return;
         }
