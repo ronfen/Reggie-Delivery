@@ -7,6 +7,7 @@ import com.leo.reggie.common.R;
 import com.leo.reggie.dto.DishDto;
 import com.leo.reggie.entity.Category;
 import com.leo.reggie.entity.Dish;
+import com.leo.reggie.entity.DishFlavor;
 import com.leo.reggie.entity.Employee;
 import com.leo.reggie.service.CategoryService;
 import com.leo.reggie.service.DishFlavorService;
@@ -133,8 +134,21 @@ public class DishController {
         return R.success("update status successfully");
     }
 
+//    @GetMapping("/list")
+//    public R<List<Dish>> list(Dish dish) {
+//
+//        LambdaQueryWrapper<Dish> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+//        lambdaQueryWrapper.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
+//        lambdaQueryWrapper.eq(Dish::getStatus,1);
+//        lambdaQueryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
+//
+//        List<Dish> list = dishService.list(lambdaQueryWrapper);
+//        return R.success(list);
+//
+//    }
+
     @GetMapping("/list")
-    public R<List<Dish>> list(Dish dish) {
+    public R<List<DishDto>> list(Dish dish) {
 
         LambdaQueryWrapper<Dish> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
@@ -142,8 +156,21 @@ public class DishController {
         lambdaQueryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
 
         List<Dish> list = dishService.list(lambdaQueryWrapper);
-        return R.success(list);
+        List<DishDto> dishDtoList = list.stream().map((item) ->{
+            DishDto dishDto = new DishDto();
+            BeanUtils.copyProperties(item, dishDto);
+            Long dishId = item.getId();
+
+            LambdaQueryWrapper<DishFlavor> dishFlavorLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            dishFlavorLambdaQueryWrapper.eq(DishFlavor::getDishId, dishId);
+            List<DishFlavor> flavourList = dishFlavorService.list(dishFlavorLambdaQueryWrapper);
+            dishDto.setFlavors(flavourList);
+
+            return dishDto;
+        }).collect(Collectors.toList());
+        return R.success(dishDtoList);
 
     }
+
 
 }

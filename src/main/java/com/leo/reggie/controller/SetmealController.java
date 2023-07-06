@@ -105,4 +105,19 @@ public class SetmealController {
         return R.success(setmealDto);
     }
 
+
+    @GetMapping("/list")
+    public R<List<Setmeal>> list(Setmeal setmeal){
+
+        LambdaQueryWrapper<Setmeal> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(setmeal.getCategoryId() != null, Setmeal::getCategoryId, setmeal.getCategoryId());
+        wrapper.eq(setmeal.getStatus() != null, Setmeal::getStatus, setmeal.getStatus());
+        wrapper.orderByDesc(Setmeal::getUpdateTime);
+        List<Setmeal> list = setmealService.list(wrapper);
+
+
+        return R.success(list);
+
+    }
+
 }
